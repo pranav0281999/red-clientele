@@ -17,16 +17,21 @@ function App() {
   const [profile, setProfile] = useState<IProfileResult>();
 
   useEffect(() => {
+    initialLoad();
+  }, []);
+
+  const initialLoad = async () => {
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     if (urlParams.has("code")) {
-      getAccessToken(urlParams.get("code") ?? "");
+      await getAccessToken(urlParams.get("code") ?? "");
+      getProfile();
     } else if (!localStorage.getItem(LocalStorageEnum.AccessToken)) {
       redirectToOAuth();
     } else {
       getProfile();
     }
-  }, []);
+  };
 
   const getAccessToken = async (code: string) => {
     if (isGettingAccessToken.current) {
