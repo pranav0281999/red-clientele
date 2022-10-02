@@ -4,15 +4,13 @@ import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Login from "./pages/login/login";
 
 export default function MyRoutes() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/">
-          <Route index element={<Login />} />
-          <Route path={"home"} element={<App />} />
+          <Route index element={<App />} />
         </Route>
       </Routes>
     </BrowserRouter>

@@ -1,5 +1,6 @@
 import { FetchClient } from "./fetch-client";
 import { IProfileResult } from "../interfaces/i-profile-service";
+import { LocalStorageEnum } from "../enums/local-storage-enum";
 
 export default class ProfileService {
   private readonly _fetchClient = new FetchClient();
@@ -9,7 +10,9 @@ export default class ProfileService {
     return this._fetchClient
       .build(this._baseUrl + "/me")
       .useMethod("GET")
-      .useAuthorization(`bearer ${localStorage.getItem("auth_token")}`)
+      .useAuthorization(
+        `bearer ${localStorage.getItem(LocalStorageEnum.AccessToken)}`
+      )
       .useContentType("application/x-www-form-urlencoded")
       .fetch<IProfileResult>();
   }

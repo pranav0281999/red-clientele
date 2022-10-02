@@ -4,6 +4,8 @@ import AuthService from "./services/auth-service";
 import { redirectToOAuth } from "./common/util-auth";
 import ProfileService from "./services/profile-service";
 import { IProfileResult } from "./interfaces/i-profile-service";
+import { GrantTypeEnum } from "./enums/grant-type-enum";
+import { LocalStorageEnum } from "./enums/local-storage-enum";
 
 function App() {
   let authService = new AuthService();
@@ -19,6 +21,8 @@ function App() {
     const urlParams = new URLSearchParams(queryString);
     if (urlParams.has("code")) {
       getAccessToken(urlParams.get("code") ?? "");
+    } else if (!localStorage.getItem(LocalStorageEnum.AccessToken)) {
+      redirectToOAuth();
     } else {
       getProfile();
     }
@@ -33,11 +37,17 @@ function App() {
       setLoading(true);
       let getTokenResult = await authService.getAccessToken({
         code: code,
-        grant_type: "authorization_code",
-        redirect_uri: "http://localhost:3000/home",
+        grant_type: GrantTypeEnum.AuthorizationCode,
+        redirect_uri: "http://localhost:3000",
       });
-      localStorage.setItem("auth_token", getTokenResult.access_token);
-      localStorage.setItem("auth_refresh_token", getTokenResult.refresh_token);
+      localStorage.setItem(
+        LocalStorageEnum.AccessToken,
+        getTokenResult.access_token
+      );
+      localStorage.setItem(
+        LocalStorageEnum.RefreshToken,
+        getTokenResult.refresh_token
+      );
     } catch (e) {
       console.error(e);
       redirectToOAuth();
@@ -54,7 +64,7 @@ function App() {
     if (isRefreshingAccessToken.current) {
       return;
     }
-    if (!localStorage.getItem("auth_refresh_token")) {
+    if (!localStorage.getItem(LocalStorageEnum.RefreshToken)) {
       redirectToOAuth();
       return;
     }
@@ -62,11 +72,18 @@ function App() {
       isRefreshingAccessToken.current = true;
       setLoading(true);
       let getTokenResult = await authService.refreshAccessToken({
-        grant_type: "refresh_token",
-        refresh_token: localStorage.getItem("auth_refresh_token") ?? "",
+        grant_type: GrantTypeEnum.RefreshToken,
+        refresh_token:
+          localStorage.getItem(LocalStorageEnum.RefreshToken) ?? "",
       });
-      localStorage.setItem("auth_token", getTokenResult.access_token);
-      localStorage.setItem("auth_refresh_token", getTokenResult.refresh_token);
+      localStorage.setItem(
+        LocalStorageEnum.AccessToken,
+        getTokenResult.access_token
+      );
+      localStorage.setItem(
+        LocalStorageEnum.RefreshToken,
+        getTokenResult.refresh_token
+      );
     } catch (e) {
       console.error(e);
       redirectToOAuth();
