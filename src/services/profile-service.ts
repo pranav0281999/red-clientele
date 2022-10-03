@@ -13,7 +13,6 @@ export default class ProfileService {
       .useAuthorization(
         `bearer ${localStorage.getItem(LocalStorageEnum.AccessToken)}`
       )
-      .useContentType("application/x-www-form-urlencoded")
       .fetch<IProfileResult>();
   }
 }
