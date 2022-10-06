@@ -146,7 +146,20 @@ function App() {
       {!!profile ? <p>{profile.name}</p> : "profile not loaded"}
       {!!listing
         ? listing.data.children.map((child) => (
-            <p key={child.data.id}>{child.data.title}</p>
+            <div
+              key={child.data.id}
+              style={{
+                display: "flex",
+              }}
+            >
+              <p>{child.data.title}</p>
+              &nbsp;
+              <p>{child.data.author}</p>
+              &nbsp;
+              <p>{child.data.ups}</p>
+              &nbsp;
+              <p>{child.data.upvote_ratio}</p>
+            </div>
           ))
         : "listing not loaded"}
     </div>

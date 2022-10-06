@@ -1,5 +1,6 @@
 import { HttpStatusCodeEnum } from "../enums/http-status-code-enum";
 import { buildQueryString } from "./fetch-client-util";
+import { redirectToOAuth } from "../common/util-auth";
 
 export class FetchClient {
   public build(path: string): FetchClientChain {
@@ -80,11 +81,17 @@ export class FetchClientChain {
   public async fetch<TResponse>(): Promise<TResponse> {
     let response = await fetch(this._path, this._init);
     if (!response.ok) {
-      throw new FetchClientHttpError(
-        response.status,
-        response.statusText,
-        response
-      );
+      switch (response.status) {
+        case HttpStatusCodeEnum.Unauthorized:
+          redirectToOAuth();
+          break;
+        default:
+          throw new FetchClientHttpError(
+            response.status,
+            response.statusText,
+            response
+          );
+      }
     }
 
     let json = await response.json();
