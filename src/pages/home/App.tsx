@@ -1,25 +1,22 @@
 import { useEffect, useRef, useState } from "react";
 import "./App.css";
-import AuthService from "./services/auth-service";
-import { redirectToOAuth } from "./common/util-auth";
-import ProfileService from "./services/profile-service";
-import { IProfileResult } from "./interfaces/i-profile-service";
-import { GrantTypeEnum } from "./enums/grant-type-enum";
-import { LocalStorageEnum } from "./enums/local-storage-enum";
-import { IGetAllBestResult } from "./interfaces/i-listing-service";
-import ListingService from "./services/listing-service";
+import AuthService from "../../services/auth-service";
+import { redirectToOAuth } from "../../common/util-auth";
+import ProfileService from "../../services/profile-service";
+import { IProfileResult } from "../../interfaces/i-profile-service";
+import { GrantTypeEnum } from "../../enums/grant-type-enum";
+import { LocalStorageEnum } from "../../enums/local-storage-enum";
+import Listing from "./listing/Listing";
+import NavBar from "../../components/navBar/navBar";
 
 function App() {
   let authService = new AuthService();
   let profileService = new ProfileService();
-  let listingService = new ListingService();
   let isGettingAccessToken = useRef<boolean>(false);
   let isRefreshingAccessToken = useRef<boolean>(false);
   let isProfileLoading = useRef<boolean>(false);
-  let isListingLoading = useRef<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [profile, setProfile] = useState<IProfileResult>();
-  const [listing, setListing] = useState<IGetAllBestResult>();
 
   useEffect(() => {
     initialLoad();
@@ -31,12 +28,10 @@ function App() {
     if (urlParams.has("code")) {
       await getAccessToken(urlParams.get("code") ?? "");
       getProfile();
-      getAllHot();
     } else if (!localStorage.getItem(LocalStorageEnum.AccessToken)) {
       redirectToOAuth();
     } else {
       getProfile();
-      getAllHot();
     }
   };
 
@@ -121,47 +116,10 @@ function App() {
     }
   };
 
-  const getAllHot = async () => {
-    if (isListingLoading.current) {
-      return;
-    }
-    try {
-      isListingLoading.current = true;
-      setListing(
-        await listingService.getAllBest({
-          g: "GLOBAL",
-          limit: "50",
-        })
-      );
-    } catch (e) {
-      console.error(e);
-    } finally {
-      isListingLoading.current = false;
-    }
-  };
-
   return (
-    <div className="App">
-      {loading ? <p>Loading...</p> : <p>Hello</p>}
-      {!!profile ? <p>{profile.name}</p> : "profile not loaded"}
-      {!!listing
-        ? listing.data.children.map((child) => (
-            <div
-              key={child.data.id}
-              style={{
-                display: "flex",
-              }}
-            >
-              <p>{child.data.title}</p>
-              &nbsp;
-              <p>{child.data.author}</p>
-              &nbsp;
-              <p>{child.data.ups}</p>
-              &nbsp;
-              <p>{child.data.upvote_ratio}</p>
-            </div>
-          ))
-        : "listing not loaded"}
+    <div>
+      {!!profile ? <NavBar profile={profile} /> : "profile not loaded"}
+      {!loading ? <Listing /> : null}
     </div>
   );
 }
