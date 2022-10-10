@@ -6,7 +6,7 @@ import ProfileService from "../../services/profile-service";
 import { IProfileResult } from "../../interfaces/i-profile-service";
 import { GrantTypeEnum } from "../../enums/grant-type-enum";
 import { LocalStorageEnum } from "../../enums/local-storage-enum";
-import Listing from "./listing/Listing";
+import Listing from "./listing/listing";
 import NavBar from "../../components/navBar/navBar";
 
 function App() {
@@ -117,7 +117,7 @@ function App() {
   };
 
   return (
-    <div>
+    <div className={"app-div"}>
       {!!profile ? <NavBar profile={profile} /> : "profile not loaded"}
       {!loading ? <Listing /> : null}
     </div>
