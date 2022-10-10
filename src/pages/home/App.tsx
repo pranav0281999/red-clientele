@@ -118,7 +118,7 @@ function App() {
 
   return (
     <div className={"app-div"}>
-      {!!profile ? <NavBar profile={profile} /> : "profile not loaded"}
+      {!!profile ? <NavBar profile={profile} /> : null}
       {!loading ? <Listing /> : null}
     </div>
   );

@@ -4,3 +4,11 @@
     border-radius: 18px;
     margin: 25px 0;
 }
+
+.post-upvote-color {
+    color: orangered !important;
+}
+
+.post-downvote-color {
+    color: dodgerblue !important;
+}

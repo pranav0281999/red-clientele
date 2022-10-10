@@ -21,7 +21,7 @@ interface NavBarProps {
   profile: IProfileResult;
 }
 
-function NavBar(props: NavBarProps) {
+function NavBar({profile}: NavBarProps) {
   const [anchorElNav, setAnchorElNav] = useState<HTMLButtonElement | null>(
     null
   );
@@ -136,8 +136,8 @@ function NavBar(props: NavBarProps) {
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                 <Avatar
-                  alt={props.profile.name}
-                  src={props.profile.snoovatar_img}
+                  alt={profile?.name}
+                  src={profile?.snoovatar_img}
                 />
               </IconButton>
             </Tooltip>

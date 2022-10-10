@@ -85,6 +85,9 @@ export class FetchClientChain {
         case HttpStatusCodeEnum.Unauthorized:
           redirectToOAuth();
           break;
+        case HttpStatusCodeEnum.Forbidden:
+          redirectToOAuth();
+          break;
         default:
           throw new FetchClientHttpError(
             response.status,
