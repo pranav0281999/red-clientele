@@ -38,7 +38,9 @@ function Listing() {
   return (
     <div className={"listing-div"}>
       {loadingCount === 0 ? (
-        listing?.data.children.map((post) => <ListingPost post={post} />)
+        listing?.data.children.map((post) => (
+          <ListingPost key={post.data.id} post={post} />
+        ))
       ) : (
         <CircularProgress />
       )}

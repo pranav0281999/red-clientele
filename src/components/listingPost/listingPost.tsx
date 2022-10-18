@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
 import CardContent from "@mui/material/CardContent";
@@ -8,13 +8,16 @@ import Avatar from "@mui/material/Avatar";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import ShareIcon from "@mui/icons-material/Share";
-import { ThumbDown, ThumbUp } from "@mui/icons-material";
+import { ChatBubbleOutline, ThumbDown, ThumbUp } from "@mui/icons-material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import moment from "moment";
 import { IPost } from "../../interfaces/i-listing-service";
 import VideoJS from "../videoJs/videoJs";
 import "./listingPost.css";
 import PostService from "../../services/post-service";
+import SubredditService from "../../services/subreddit-service";
+import { IGetSubredditAboutResult } from "../../interfaces/i-subreddit-service";
+import { urlRemoveParams } from "../../common/util-url";
 
 interface IListingPostProps {
   post: IPost;
@@ -22,10 +25,25 @@ interface IListingPostProps {
 
 function ListingPost({ post }: IListingPostProps) {
   let postService = new PostService();
+  let subredditService = new SubredditService();
   const [upvoting, setUpvoting] = useState<boolean>(false);
+  const [subredditAbout, setSubredditAbout] =
+    useState<IGetSubredditAboutResult | null>(null);
   const [voteDirection, setVoteDirection] = useState<boolean | null>(
     post.data.likes
   );
+
+  useEffect(() => {
+    getSubredditAbout(post.data.subreddit);
+  }, []);
+
+  const getSubredditAbout = async (subreddit: string) => {
+    try {
+      setSubredditAbout(await subredditService.getAbout(post.data.subreddit));
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
   const vote = async (direction: number) => {
     try {
@@ -64,7 +82,12 @@ function ListingPost({ post }: IListingPostProps) {
   return (
     <Card className={"post-card"}>
       <CardHeader
-        avatar={<Avatar alt={post.data.subreddit} src={post.data.thumbnail} />}
+        avatar={
+          <Avatar
+            alt={post.data.subreddit}
+            src={urlRemoveParams(subredditAbout?.data.community_icon)}
+          />
+        }
         action={
           <IconButton aria-label="settings">
             <MoreVertIcon />
@@ -90,7 +113,7 @@ function ListingPost({ post }: IListingPostProps) {
           }}
           onReady={() => {}}
         />
-      ) : !!post.data.preview ? (
+      ) : !!post.data.preview?.enabled ? (
         <img
           src={post.data.url}
           alt={post.data.title}
@@ -110,6 +133,7 @@ function ListingPost({ post }: IListingPostProps) {
         >
           <ThumbUp />
         </IconButton>
+        <Typography>{post.data.score}</Typography>
         <IconButton
           aria-label="downvote"
           onClick={() => vote(-1)}
@@ -117,6 +141,11 @@ function ListingPost({ post }: IListingPostProps) {
         >
           <ThumbDown />
         </IconButton>
+        &nbsp;
+        <IconButton aria-label="comments" onClick={() => {}}>
+          <ChatBubbleOutline />
+        </IconButton>
+        <Typography>{post.data.num_comments} comments</Typography>
         <IconButton aria-label="share" style={{ marginLeft: "auto" }}>
           <ShareIcon />
         </IconButton>
