@@ -1,19 +1,7 @@
-import * as React from "react";
 import { useEffect, useState } from "react";
-import Card from "@mui/material/Card";
-import CardHeader from "@mui/material/CardHeader";
-import CardContent from "@mui/material/CardContent";
-import CardActions from "@mui/material/CardActions";
-import Avatar from "@mui/material/Avatar";
-import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
-import ShareIcon from "@mui/icons-material/Share";
-import { ChatBubbleOutline, ThumbDown, ThumbUp } from "@mui/icons-material";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
 import moment from "moment";
 import { IPost } from "../../interfaces/i-listing-service";
 import VideoJS from "../videoJs/videoJs";
-import "./listingPost.css";
 import PostService from "../../services/post-service";
 import SubredditService from "../../services/subreddit-service";
 import { IGetSubredditAboutResult } from "../../interfaces/i-subreddit-service";
@@ -80,24 +68,30 @@ function ListingPost({ post }: IListingPostProps) {
   };
 
   return (
-    <Card className={"post-card"}>
-      <CardHeader
-        avatar={
-          <Avatar
+    <div className="flex rounded-md shadow-md w-11/12 max-w-xl my-4 bg-white flex-col">
+      <div className="flex flex-row justify-between items-center p-2">
+        <div className="flex flex-row items-center">
+          <img
             alt={post.data.subreddit}
             src={urlRemoveParams(subredditAbout?.data.community_icon)}
+            className="h-16 w-16 object-contain rounded-full"
           />
-        }
-        action={
-          <IconButton aria-label="settings">
-            <MoreVertIcon />
-          </IconButton>
-        }
-        title={post.data.subreddit}
-        subheader={moment
-          .unix(post.data.created)
-          .format("hh:mm a, DD MMM YYYY")}
-      />
+          <div className="ml-2">
+            <p className="text-base">
+              {post.data.subreddit}
+            </p>
+            <p className="text-sm">
+              {moment
+                .unix(post.data.created)
+                .format("hh:mm a, DD MMM YYYY")}
+            </p>
+          </div>
+        </div>
+        <span className="material-icons">
+          more_vert
+        </span>
+      </div>
+      <p className="p-4 text-lg">{post.data.title}</p>
       {post.data.is_video ? (
         <VideoJS
           options={{
@@ -111,46 +105,43 @@ function ListingPost({ post }: IListingPostProps) {
               },
             ],
           }}
-          onReady={() => {}}
+          onReady={() => { }}
+          className="w-full"
         />
       ) : !!post.data.preview?.enabled ? (
         <img
           src={post.data.url}
           alt={post.data.title}
-          style={{
-            width: "100%",
-          }}
+          className="w-full"
         />
       ) : null}
-      <CardContent>
-        <Typography>{post.data.title}</Typography>
-      </CardContent>
-      <CardActions disableSpacing>
-        <IconButton
-          aria-label="upvote"
+      <div className="flex flex-row items-center p-4">
+        <span
           onClick={() => vote(1)}
-          className={voteDirection ? "post-upvote-color" : ""}
+          className={`material-icons ${voteDirection ? "text-orange-500" : ""}`}
         >
-          <ThumbUp />
-        </IconButton>
-        <Typography>{post.data.score}</Typography>
-        <IconButton
-          aria-label="downvote"
+          thumb_up
+        </span>
+        <p className="px-2 text-sm">{post.data.score}</p>
+        <span
           onClick={() => vote(-1)}
-          className={voteDirection === false ? "post-downvote-color" : ""}
+          className={`material-icons ${voteDirection === false ? "text-blue-500" : ""}`}
         >
-          <ThumbDown />
-        </IconButton>
-        &nbsp;
-        <IconButton aria-label="comments" onClick={() => {}}>
-          <ChatBubbleOutline />
-        </IconButton>
-        <Typography>{post.data.num_comments} comments</Typography>
-        <IconButton aria-label="share" style={{ marginLeft: "auto" }}>
-          <ShareIcon />
-        </IconButton>
-      </CardActions>
-    </Card>
+          thumb_down
+        </span>
+        <span
+          className={`material-icons pl-4`}
+        >
+          chat_bubble
+        </span>
+        <p className="px-2 text-sm">{post.data.num_comments} comments</p>
+        <span
+          className={`material-icons ml-auto`}
+        >
+          share
+        </span>
+      </div>
+    </div>
   );
 }
 
