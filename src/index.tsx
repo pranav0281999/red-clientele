@@ -3,32 +3,34 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 import App from "./pages/home/App";
 import reportWebVitals from "./reportWebVitals";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
+import Profile from "./pages/profile/profile";
 
 export default function MyRoutes() {
-  return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/">
-          <Route index element={<App />} />
-          <Route path={"/popular"} element={<App />} />
-        </Route>
-      </Routes>
-    </BrowserRouter>
-  );
+    return (
+        <BrowserRouter>
+            <Routes>
+                <Route path="/">
+                    <Route index element={<App />} />
+                    <Route path={"/popular"} element={<App />} />
+                    <Route path={"/profile"} element={<Profile />} />
+                </Route>
+            </Routes>
+        </BrowserRouter>
+    );
 }
 
 const root = ReactDOM.createRoot(
-  document.getElementById("root") as HTMLElement
+    document.getElementById("root") as HTMLElement
 );
 root.render(
-  <React.StrictMode>
-    <MyRoutes />
-  </React.StrictMode>
+    <React.StrictMode>
+        <MyRoutes />
+    </React.StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function
