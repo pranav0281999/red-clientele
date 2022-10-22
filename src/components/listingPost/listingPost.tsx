@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, SyntheticEvent } from "react";
 import moment from "moment";
 import { IPost } from "../../interfaces/i-listing-service";
 import VideoJS from "../videoJs/videoJs";
@@ -71,11 +71,16 @@ function ListingPost({ post }: IListingPostProps) {
     <div className="flex rounded-md shadow-md w-11/12 max-w-xl my-4 bg-white flex-col">
       <div className="flex flex-row justify-between items-center p-2">
         <div className="flex flex-row items-center">
-          <img
-            alt={post.data.subreddit}
-            src={urlRemoveParams(subredditAbout?.data.community_icon)}
-            className="h-16 w-16 object-contain rounded-full"
-          />
+          <div className="h-16 w-16 relative flex justify-center items-center">
+            <p className="absolute text-lg">{post.data.subreddit[0]?.toUpperCase()}</p>
+            <img
+              src={urlRemoveParams(subredditAbout?.data.community_icon)}
+              className="h-full w-full object-contain rounded-full z-10 bg-white"
+              onError={(event: React.SyntheticEvent<HTMLImageElement, Event>) => {
+                event.currentTarget.classList.add("hidden");
+              }}
+            />
+          </div>
           <div className="ml-2">
             <p className="text-base">
               {post.data.subreddit}
