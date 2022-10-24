@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import "./App.css";
 import AuthService from "../../services/auth-service";
 import { redirectToOAuth } from "../../common/util-auth";
 import ProfileService from "../../services/profile-service";
@@ -117,7 +116,7 @@ function App() {
   };
 
   return (
-    <div className={"app-div"}>
+    <div className={"flex flex-col min-h-screen w-full bg-[#050a18]"}>
       {!!profile ? <NavBar profile={profile} /> : null}
       {!loading ? <Listing /> : null}
     </div>

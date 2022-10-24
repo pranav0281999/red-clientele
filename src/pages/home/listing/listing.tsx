@@ -1,9 +1,7 @@
-import * as React from "react";
 import { useEffect, useState } from "react";
 import { IGetAllBestResult } from "../../../interfaces/i-listing-service";
 import ListingService from "../../../services/listing-service";
 import ListingPost from "../../../components/listingPost/listingPost";
-import "./listing.css";
 
 function Listing() {
   let listingService = new ListingService();
@@ -35,13 +33,13 @@ function Listing() {
   };
 
   return (
-    <div className={"listing-div"}>
+    <div className={"flex flex-col justify-center items-center h-full flex-grow"}>
       {loadingCount === 0 ? (
         listing?.data.children.map((post) => (
           <ListingPost key={post.data.id} post={post} />
         ))
       ) : (
-        <span className="animate-ping inline-flex h-8 w-8 rounded-full bg-sky-400"></span>
+        <span className="animate-ping inline-flex h-8 w-8 rounded-full"></span>
       )}
     </div>
   );
