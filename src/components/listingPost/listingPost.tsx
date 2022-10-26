@@ -68,14 +68,14 @@ function ListingPost({ post }: IListingPostProps) {
   };
 
   return (
-    <div className="flex rounded-md shadow-md w-11/12 max-w-xl my-4 bg-white flex-col">
+    <div className="flex flex-col text-white border-solid border-gray-600 border-x border-y grid-item">
       <div className="flex flex-row justify-between items-center p-2">
         <div className="flex flex-row items-center">
           <div className="h-16 w-16 relative flex justify-center items-center">
             <p className="absolute text-lg">{post.data.subreddit[0]?.toUpperCase()}</p>
             <img
               src={urlRemoveParams(subredditAbout?.data.community_icon)}
-              className="h-full w-full object-contain rounded-full z-10 bg-white"
+              className="h-full w-full object-contain rounded-full z-10 bg-black"
               onError={(event: React.SyntheticEvent<HTMLImageElement, Event>) => {
                 event.currentTarget.classList.add("hidden");
               }}
@@ -111,13 +111,13 @@ function ListingPost({ post }: IListingPostProps) {
             ],
           }}
           onReady={() => { }}
-          className="w-full"
+          className="flex-grow"
         />
       ) : !!post.data.preview?.enabled ? (
         <img
           src={post.data.url}
           alt={post.data.title}
-          className="w-full"
+          className="flex-grow"
         />
       ) : null}
       <div className="flex flex-row items-center p-4">

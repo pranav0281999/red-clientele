@@ -116,7 +116,7 @@ function App() {
   };
 
   return (
-    <div className={"flex flex-col min-h-screen w-full bg-[#050a18]"}>
+    <div className={"flex flex-col min-h-screen w-full bg-[#050a18] overflow-auto"}>
       {!!profile ? <NavBar profile={profile} /> : null}
       {!loading ? <Listing /> : null}
     </div>

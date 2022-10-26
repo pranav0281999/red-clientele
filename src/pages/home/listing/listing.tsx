@@ -33,13 +33,17 @@ function Listing() {
   };
 
   return (
-    <div className={"flex flex-col justify-center items-center h-full flex-grow"}>
+    <div className={"h-full"}>
       {loadingCount === 0 ? (
-        listing?.data.children.map((post) => (
-          <ListingPost key={post.data.id} post={post} />
-        ))
+        <div className="grid grid-cols-1 max-h-48">
+          {listing?.data.children.map((post) => (
+            <ListingPost key={post.data.id} post={post} />
+          ))}
+        </div>
       ) : (
-        <span className="animate-ping inline-flex h-8 w-8 rounded-full"></span>
+        <div className="flex justify-center items-center w-full h-full">
+          <span className="animate-ping inline-flex h-8 w-8 rounded-full" />
+        </div>
       )}
     </div>
   );
